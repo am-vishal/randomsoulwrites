@@ -3,25 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RandomSoulWrites Generator</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>randomsoulwrites generator</title>
+
+    <!-- Font -->
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap"
       rel="stylesheet"
     />
+
+    <!-- html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="container">
+    <div class="app">
+      <h2>randomsoulwrites ✍️</h2>
+
       <textarea id="inputText" placeholder="Write your text here..."></textarea>
 
-      <button onclick="generateDesign()">Generate</button>
+      <button onclick="generate()">Generate</button>
+      <button class="download-btn" onclick="downloadImage()">
+        Download Image
+      </button>
 
-      <div class="preview" id="preview">
-        <div class="text" id="outputText"></div>
+      <!-- DESIGN AREA -->
+      <div id="card" class="card">
+        <div id="outputText" class="text"></div>
 
-        <div class="username-wrap">
+        <div class="signature">
           <div class="username">@randomsoulwrites</div>
-          <div class="pen-line"></div>
+          <div class="pen"></div>
         </div>
       </div>
     </div>
