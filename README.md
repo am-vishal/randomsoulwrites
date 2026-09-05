@@ -186,3 +186,10 @@ Type shrinks from `TEXT_MAX_FONT` toward `TEXT_MIN_FONT` until the block fits
 above the logo. If it still does not fit, `computeLayout` returns
 `overflow: true` and the status line suggests a taller size. **Nothing is ever
 truncated.**
+
+## Run Locally
+
+To run the project using Python's built-in HTTP server:
+
+```bash
+python -m http.server 8000
