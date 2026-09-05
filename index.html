@@ -1,43 +1,154 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>randomsoulwrites generator</title>
 
-    <!-- Font -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
+<head>
+  <meta charset="UTF-8">
 
-    <!-- html2canvas -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div class="app">
-      <h2>randomsoulwrites ✍️</h2>
+  <title>RandomSoulWrites — Turn Thoughts Into Words</title>
 
-      <textarea id="inputText" placeholder="Write your text here..."></textarea>
+  <meta name="description"
+    content="RandomSoulWrites is a simple quote creator by Vishal, a Full-Stack Developer. Turn your thoughts, feelings, and words into beautiful shareable images for Instagram.">
 
-      <button onclick="generate()">Generate</button>
-      <button class="download-btn" onclick="downloadImage()">
-        Download Image
-      </button>
+  <meta name="keywords"
+    content="RandomSoulWrites, random soul writes, quote generator, quote maker, Instagram quote generator, quote image maker, text to image, aesthetic quotes, Instagram posts, quote creator, Vishal, Full Stack Developer, MERN Stack Developer">
 
-      <!-- DESIGN AREA -->
-      <div id="card" class="card">
-        <div id="outputText" class="text"></div>
+  <meta name="author" content="Vishal">
 
-        <div class="signature">
-          <div class="username">@randomsoulwrites</div>
-          <div class="pen"></div>
-        </div>
-      </div>
+  <meta name="creator" content="Vishal">
+
+  <meta name="publisher" content="Vishal">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://am-vishal.github.io/">
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Robots -->
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Facebook / LinkedIn -->
+  <meta property="og:type" content="website">
+
+  <meta property="og:title" content="RandomSoulWrites — Turn Thoughts Into Words">
+
+  <meta property="og:description"
+    content="Turn your thoughts and feelings into beautiful, shareable quote images. Created by Vishal.">
+
+  <meta property="og:url" content="https://am-vishal.github.io/">
+
+  <meta property="og:site_name" content="RandomSoulWrites">
+
+  <meta property="og:locale" content="en_US">
+
+  <!-- Replace this with your actual preview image -->
+  <meta property="og:image" content="https://am-vishal.github.io/assets/images/randomsoulwrites-preview.jpg">
+
+  <meta property="og:image:alt" content="RandomSoulWrites quote generator">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="./assets/randomsoulwrites-logo.svg">
+
+  <!-- Optional fallback favicon -->
+  <link rel="alternate icon" href="./assets/favicon.png">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "RandomSoulWrites",
+        "description": "A simple quote generator that turns thoughts and feelings into beautiful shareable images.",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web",
+        "url": "https://am-vishal.github.io/",
+        "author": {
+            "@type": "Person",
+            "name": "Vishal",
+            "url": "https://am-vishal.github.io/"
+        },
+        "creator": {
+            "@type": "Person",
+            "name": "Vishal",
+            "url": "https://am-vishal.github.io/"
+        }
+    }
+    </script>
+
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="app">
+    <h2 class="logo-title">
+      <a href="https://www.instagram.com/randomsoulwrites/" target="_blank" rel="noopener noreferrer">
+        randomsoul<span>writes</span>
+      </a>
+    </h2>
+    <p class="tagline">Some thoughts deserve more than a moment.</p>
+
+    <textarea id="inputText" placeholder="Write your text here..."></textarea>
+
+    <div class="options">
+      <label class="field">
+        <span>Output size</span>
+        <select id="sizePreset">
+          <option value="square">Instagram Square &mdash; 1080 &times; 1080</option>
+          <option value="portrait">Instagram Portrait &mdash; 1080 &times; 1350</option>
+          <option value="story">Instagram Story &mdash; 1080 &times; 1920</option>
+          <option value="custom">Custom size</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Format</span>
+        <select id="format">
+          <option value="jpg">JPG</option>
+          <option value="png">PNG</option>
+          <option value="svg">SVG</option>
+        </select>
+      </label>
     </div>
 
-    <script src="script.js"></script>
-  </body>
+    <div class="custom-size" id="customSize" hidden>
+      <label class="field">
+        <span>Width</span>
+        <input id="customWidth" type="number" min="200" max="6000" step="10" value="1080" />
+      </label>
+      <label class="field">
+        <span>Height</span>
+        <input id="customHeight" type="number" min="200" max="6000" step="10" value="1080" />
+      </label>
+    </div>
+
+    <button id="generateBtn" type="button">Generate</button>
+    <button id="downloadBtn" class="download-btn" type="button">Download Image</button>
+
+    <!-- DESIGN AREA -->
+    <!-- The canvas backing store is always the full export resolution.
+           Only its CSS box is scaled down to fit the page. -->
+    <div class="card">
+      <canvas id="preview" width="1080" height="1080"></canvas>
+    </div>
+
+    <p class="status" id="status">1080 &times; 1080 &middot; JPG</p>
+  </div>
+
+  <footer class="site-footer">
+    <p>Made with words &amp; a little soul by Vishal.</p>
+    <p>Some thoughts deserve more than a moment.</p>
+  </footer>
+
+  <script src="assets/logo.js"></script>
+  <script src="script.js"></script>
+</body>
+
+
 </html>
