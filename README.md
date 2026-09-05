@@ -27,12 +27,34 @@ It was traced from the supplied profile-picture screenshot:
 - avatar circle fitted at centre `(273.3, 378.2)`, radius `264.5`; everything
   outside it masked away
 - the overlapping dark "edit" button removed
-- cream paper normalised to white, upscaled 6× (Lanczos), gamma 1.3
-- traced with `potrace -k 0.62 --turdsize 12 --alphamax 1.0`
+- cream paper normalised to white, upscaled 6× (Lanczos)
 
-The gamma + `0.62` threshold combination was chosen after testing: at `0.55` the
-thin secondary strokes under the wordmark broke into dashes and the left taper
-of the swoosh became a stray dot; at `0.78` every stroke thickened noticeably.
+### Two traces, merged at path level
+
+A single threshold cannot serve the whole logo, so the same raster is traced
+twice and the two results are merged:
+
+| Region | Settings | Why |
+|---|---|---|
+| feather, nib, swirl | `-k 0.45`, no gamma | keeps the white quill spine and barb notches **open** |
+| wordmark, swoosh | `-k 0.62`, gamma 1.3 | keeps the faint hairlines under the wordmark **continuous** |
+
+Darkening enough to save the hairlines fills the feather in and turns it into a
+solid black blob. Lightening enough to open the feather breaks the hairlines
+into dashes. Hence the split.
+
+The merge is done at *path* level, not by geometric cutting: potrace emits one
+`<path>` per connected shape, so the feather cluster is selected by bounding box
+(`x > 2000 && y < 700` in the 2892×1134 trace space) from the light pass, and
+everything else comes from the dark pass. Nothing is ever sliced through a
+stroke. Note that the dark pass fuses feather+nib+swirl into a single path while
+the light pass separates them — this is why the whole upper-right cluster must
+come from the light pass together.
+
+Both traces share an identical `<g transform>`, so coordinates line up exactly.
+The merged outer extremes are unchanged, so `viewBox` and `aspect` are byte-
+identical to the single-trace version — swapping the asset requires no changes
+anywhere else.
 
 Result: `viewBox="26.00 2.00 2866.00 1108.00"`, intrinsic `2400×928`,
 aspect ratio **2.586643**, fill `#111111`, transparent background, no padding,
@@ -49,6 +71,15 @@ scale) continuing both existing edges to a point.
 **This is the only inferred part of the asset.** If the original logo file
 (PNG / Illustrator / Canva export) ever turns up, retrace from that and the
 question disappears.
+
+### Known caveat — barb detail ceiling
+
+The feather occupies roughly 90×80 pixels in the source screenshot. Some barb
+separations are a single pixel wide and already half-blurred by the avatar
+downscale. The light trace recovers what is present; the original has slightly
+finer serrations along the upper edge than 90px can hold. Adding more would mean
+redrawing the feather, which is out of scope. Only a higher-resolution source
+fixes this.
 
 ### Why the logo lives in two files
 
